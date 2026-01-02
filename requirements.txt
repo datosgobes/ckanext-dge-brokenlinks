@@ -1,0 +1,7 @@
+progressbar2==3.53.3
+pytest-ckan
+flask
+gevent
+mock
+pytest-cov
+future

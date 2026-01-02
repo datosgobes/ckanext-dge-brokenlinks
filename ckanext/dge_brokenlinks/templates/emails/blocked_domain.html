@@ -1,0 +1,50 @@
+{# Finished harvest job email template #}
+
+
+<html>
+<head>
+    <style>
+
+        footer div p {
+            font-family: 'Calibri';
+            font-size: 11px;
+        }
+        .mensaje p {margin: 0;}
+        .mensaje .ml10 {margin-left: 10px;}
+        .mensaje .mb10 {margin-bottom: 10px;}
+    </style>
+</head>
+<body>
+  <div class="mensaje">
+    <p class="mb10">Estimado/a.</p>
+    <p class="mb10">En el proceso de comprobación de enlaces rotos, el dominio {{brokendomainUrl.domain}} ha sido bloqueado temporalmente hasta la siguiente fecha {{banned_until}}. Esto es debido a los reiterados errores de exceso de tiempo (408 Timeout) en
+    la comprobación de los enlaces de las distribuciones pertenecientes al organismo
+    publicador "{{organization.title}}". Podrá acceder próximamente al reporte de enlaces rotos publicados en el
+    catálogo de datos.gob.es a través del siguiente enlace {{url_report}}</p>
+    <p class="mb10">Un saludo.</p>
+  </div>
+    <footer>
+        <p style="margin-top:0;margin-bottom:0;"><em>Iniciativa Aporta - </em> <a href="https://datos.gob.es/es/"><em>datos.gob.es</em></a></p>
+        <p style="margin-top:0;margin-bottom:0;"><em>Entidad pública </em><a href="https://www.red.es/es"><em>Red.es</em></a></p>
+        <p style="margin-top:0;margin-bottom:0;"><em>Ministerio para la Transformación Digital y de la Función Pública</em></p>
+        <table style="font-family:arial,sans-serif;width:100%;height:100px;border-collapse:collapse;border-style:none;float:left;">
+          <tbody>
+            <tr style="border-style:none;">
+              <td style="text-align:left;height:50px;padding:8px;border:1px none #DDDDDD;">
+                <div data-entity-type="media"><img alt="logos" height="55" src="{{url_logos}}" data-imagetype="External">
+                </div>
+              </td>
+            </tr>
+            <tr style="border-style:none;">
+              <td style="text-align:left;height:35px;padding:8px;border:1px none #DDDDDD;">
+                <a href="{{url_subscribe}}">
+                  <div data-entity-type="media"><img alt="suscripción" height="45" src="{{url_image_subscribe}}" data-imagetype="External">
+                  </div>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    </footer>
+</body>
+</html>

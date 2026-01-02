@@ -1,0 +1,384 @@
+/*
+* Copyright (C) 2025 Entidad Pública Empresarial Red.es
+*
+* This file is part of "dge-brokenlinks (datos.gob.es)".
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.page-title div {
+  display: flex;
+  flex-direction: row;
+}
+.page-title div h1 {
+  margin: 0;
+}
+.page-title div p {
+  margin-left: 1rem;
+  font-style: italic;
+  font-weight: 500;
+  font-family: montserrat;
+}
+
+.brokenlinks-description .paragraph-broken-1,
+.brokenlinks-description .paragraph-broken-2 {
+  display: inline;
+}
+
+.brokenlinks-description .paragraph-broken-1 p,
+.brokenlinks-description .paragraph-broken-1 strong {
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+
+.broken-results {
+  margin-bottom: 4rem;
+  padding: 1.5rem 1rem;
+  box-shadow: var(--box-shadow);
+  background-color: #fafafa;
+}
+
+.broken-results > h4 {
+  margin: 0 0 1rem 0;
+
+}
+
+.broken-results .brokenlinks-progress {
+  display: flex;
+  gap: 12%;
+  margin-bottom: 3rem;
+}
+
+.broken-results .brokenlinks-progress .broken-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.broken-results .brokenlinks-progress .broken-info .broken-info-title {
+  margin: 1rem 0;
+  color: var(--primary-700);
+  font-weight: bold;
+}
+
+.broken-results .brokenlinks-progress .broken-info .broken-info-result span {
+  color: var(--primary-700);
+}
+
+.broken-results .archiver-multiselect .broken-filter {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.broken-results .archiver-multiselect .broken-filter .broken-filter-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.broken-results .archiver-multiselect .broken-filter .broken-filter-item.broken-filter-activation {
+  display: flex;
+  align-content: flex-end;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.broken-results .archiver-multiselect .broken-filter .broken-filter-item.broken-filter-activation .btn-link,
+.broken-results .archiver-multiselect .broken-filter .broken-filter-item.broken-filter-activation .btn-link:hover,
+.broken-results .archiver-multiselect .broken-filter .broken-filter-item.broken-filter-activation .btn-link:focus,
+.broken-results .archiver-multiselect .broken-filter .broken-filter-item.broken-filter-activation .btn-link:focus-visible {
+  padding-left: 2rem;
+  margin: 0 0 .5rem 1rem;
+  font-size: .875rem;
+  font-weight: bold;
+  color: var(--primary-500);
+  text-decoration: unset;
+}
+
+.broken-results .archiver-multiselect .broken-filter .broken-filter-item.broken-filter-activation .btn-link#selectAll {
+  background-image: url(/images/select-all.svg);
+  background-repeat: no-repeat;
+  background-position: left 0rem;
+}
+
+.broken-results .archiver-multiselect .broken-filter .broken-filter-item.broken-filter-activation .btn-link#deselectAll {
+  background-image: url(/images/unselect.svg);
+  background-repeat: no-repeat;
+  background-position: left 0rem;
+}
+
+h2 {
+  font-size: .875rem !important;
+}
+
+/* Estilo para tablas */
+
+.table-container {
+  max-height: 34rem;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+table a {
+  font-family: montserrat-semiBold;
+  text-decoration: unset;
+  color: var(--primary-500);
+}
+
+table thead th {
+  font-family: 'montserrat-semiBold';
+  color: var(--primary-700);
+}
+
+#organizationTable thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+#organizationTable th:first-child,
+#organizationTable td:first-child {
+    width: 70%;
+    min-width: 15rem;
+}
+#organizationTable th:nth-child(2),
+#organizationTable td:nth-child(2) {
+    width: 30%;
+    min-width: 15rem;
+}
+ 
+#report-ban-table th:first-child,
+#report-ban-table td:first-child {
+    width: 30%;
+    min-width: 15rem;
+}
+#report-ban-table th:nth-child(2),
+#report-ban-table td:nth-child(2) {
+    width: 40%;
+    min-width: 15rem;
+}
+#report-ban-table th:nth-child(3),
+#report-ban-table td:nth-child(3) {
+    width: 15%;
+    min-width: 15rem;
+}
+#report-ban-table th:nth-child(4),
+#report-ban-table td:nth-child(4) {
+    width: 15%;   
+    min-width: 15rem;
+}
+
+#report-table th:first-child,
+#report-table td:first-child {
+    width: 40%;
+    min-width: 15rem;
+}
+#report-table th:nth-child(2),
+#report-table td:nth-child(2) {
+    width: 30%;
+    min-width: 15rem;
+}
+#report-table th:nth-child(3),
+#report-table td:nth-child(3) {
+    width: 15%;
+    min-width: 15rem;
+}
+#report-table th:nth-child(4),
+#report-table td:nth-child(4) {
+    width: 15%;
+}
+
+#report-table.report-table-org th:first-child,
+#report-table.report-table-org td:first-child {
+    width: 30%;
+    min-width: 15rem;
+}
+#report-table.report-table-org th:nth-child(2),
+#report-table.report-table-org td:nth-child(2) {
+    width: 20%;
+    min-width: 15rem;
+}
+#report-table.report-table-org th:nth-child(3),
+#report-table.report-table-org td:nth-child(3) {
+    width: 20%;
+    min-width: 15rem;
+}
+#report-table.report-table-org th:nth-child(4),
+#report-table.report-table-org td:nth-child(4) {
+    width: 10%;
+}
+#report-table.report-table-org th:nth-child(5),
+#report-table.report-table-org td:nth-child(5) {
+    width: 10%;
+}
+#report-table.report-table-org th:nth-child(6),
+#report-table.report-table-org td:nth-child(6) {
+    width: 10%;
+}
+
+#status-id-table {
+  margin-bottom: 1rem;
+}
+
+#status-id-table th:first-child,
+#status-id-table td:first-child {
+    width: 60%;
+    min-width: 15rem;
+}
+#status-id-table th:nth-child(2),
+#status-id-table td:nth-child(2) {
+    width: 20%;
+}
+#status-id-table th:nth-child(3),
+#status-id-table td:nth-child(3) {
+    width: 20%;
+}
+
+table.broken-links.sortable {
+  margin-bottom: 4rem;
+}
+
+/* Estilo para el interruptor */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 34px;
+  height: 20px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: 0.4s;
+  border: 1px solid var(--primary-500);
+  border-radius: 50px;
+  background-color: var(--white);
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 13px;
+  width: 13px;
+  border-radius: 50px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--primary-500);
+  transition: 0.4s;
+}
+
+/* Cuando el interruptor está activado */
+input:checked + .slider {
+  background-color: var(--primary-500);
+}
+
+input:checked + .slider:before {
+  background-color: var(--white);
+  transform: translateX(14px);
+}
+
+.status-label {
+  margin-left: 1rem;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .broken-results .brokenlinks-progress {
+    gap: 3rem;
+    flex-direction: column;
+  }
+  .broken-results .brokenlinks-progress .broken-info {
+    align-items: center;
+  }
+  .broken-results .brokenlinks-progress .broken-info .broken-info-title {
+    text-align: center;
+  }
+  .broken-results .archiver-multiselect .broken-filter {
+    flex-direction: column;
+  }
+  #organizationTable {
+    display: table;
+  }
+  #selected_organizations + button {
+    width: 100%;
+  }
+  #report-table + .flex,
+  .broken-links.sortable#status-id-table + .flex {
+    flex-direction: column;
+    align-items: center;
+  }
+  #report-table.report-table-org th:nth-child(2),
+  #report-table.report-table-org td:nth-child(2) {
+    max-width: 10%;
+    overflow: hidden;
+    a {
+      display: inline-block;
+      max-width: 100%;
+      word-break: break-word;
+    }
+  }
+  #organizationTable th:first-child,
+  #organizationTable td:first-child {
+      width: 65%;
+  }
+  #organizationTable th:nth-child(2),
+  #organizationTable td:nth-child(2) {
+      width: 35%;
+  }
+  .status-label {
+    margin-left: 0rem;
+  }
+  .dropdown.open .dropdown-menu {
+    left: -92px;
+  }
+}
+
+@media (max-width: 540px) {
+  #organizationTable th:first-child,
+  #organizationTable td:first-child {
+      width: 50%;
+  }
+  #organizationTable th:nth-child(2),
+  #organizationTable td:nth-child(2) {
+      width: 50%;
+  }
+}
+
+@media (max-width: 418px) {
+  #organizationTable th:first-child,
+  #organizationTable td:first-child {
+      width: 40%;
+  }
+  #organizationTable th:nth-child(2),
+  #organizationTable td:nth-child(2) {
+      width: 60%;
+  }
+}

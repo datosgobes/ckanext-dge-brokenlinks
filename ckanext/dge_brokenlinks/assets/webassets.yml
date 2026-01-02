@@ -1,0 +1,32 @@
+jquery-tablesorter-js:
+  filter: rjsmin
+  contents:
+    - ../fanstatic/jquery.tablesorter.js
+
+dge-archiver-js:
+  filter: rjsmin
+  contents:
+    - ../fanstatic/dge-brokenlinks.js
+  extra:
+    preload:
+      - base/main
+
+multiselect-min-js:
+  filter: rjsmin
+  contents:
+    - ../multiselect/dist/js/multiselect.min.js
+
+dge-brokenlinks-report-css:
+  output: ckanext-dge-brokenlinks/%(version)s-dge-brokenlinks-report.css
+  contents:
+    - ../fanstatic/dge-brokenlinks-report.css
+
+dge-brokenlinks-datasets-css:
+  output: ckanext-dge-brokenlinks/%(version)s-dge-brokenlinks-datasets.css
+  contents:
+    - ../fanstatic/dge-brokenlinks-datasets.css
+
+dge-brokenlinks-datasets-min-css:
+  output: ckanext-dge-brokenlinks/%(version)s-dge-brokenlinks-datasets-min.css
+  contents:
+    - ../fanstatic/dge-brokenlinks-datasets.min.css

@@ -1,0 +1,272 @@
+# Copyright (C) 2025 Entidad Pública Empresarial Red.es
+#
+# This file is part of "dge-brokenlinks (datos.gob.es)".
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ckanext-dge-brokenlinks 0.0.1\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2019-11-12 11:17+0000\n"
+"PO-Revision-Date: 2018-09-14 08:25+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.6\n"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:202
+#: ckanext/dge_brokenlinks/blueprint.py:54
+msgid "perc Broken links"
+msgstr "&#37 de enlaces rotos"
+
+#: ckanext/dge_brokenlinks/templates/package/snippets/dge_resource_item.html:14
+#, fuzzy
+msgid "Access"
+msgstr "Última vez OK"
+
+#: ckanext/dge_brokenlinks/templates/report/view.html:46
+msgid "The portal"
+msgstr "El portal"
+
+#: ckanext/dge_brokenlinks/templates/report/view.html:47
+msgid "datos.gob.es periodically checks the accessibility of the links"
+msgstr " datos.gob.es verifica periódicamente la accesibilidad de los enlaces"
+
+#: ckanext/dge_brokenlinks/templates/report/view.html:48
+msgid "of the distributions of the data sets published in the catalogue. The report below is a summary of the result of this check, including the"
+msgstr "de las distribuciones de los conjuntos de datos publicados en el catálogo. El informe que se muestra a continuación es un resumen del resultado de esta verificación, e incluye la"
+
+#: ckanext/dge_brokenlinks/templates/report/view.html:49
+msgid "list of all distributions that are failing"
+msgstr " lista de todas las distribuciones que presentan fallos"
+
+#: ckanext/dge_brokenlinks/templates/report/view.html:50
+msgid "the dataset to which it belongs, the details of the error and the time at which said link was checked."
+msgstr ", el conjunto de datos al que pertenecen, los detalles del error y el momento en que se comprobó el enlace."
+
+#: ckanext/dge_brokenlinks/templates/report/view.html:53
+msgid "This check is performed by checking the response messages."
+msgstr "Esta verificación se realiza comprobando los mensajes de respuesta devueltos por cada llamada a la URL. Es posible que algunas respuestas indiquen la indisponibilidad temporal del archivo, lo que impide su descarga (por ejemplo, un error de 'timeout'), por lo que aparecerá como un enlace roto hasta la próxima verificación periódica, en la que dejará de aparecer como tal si la respuesta del servidor es exitosa."
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:7
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:61
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:81
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:123
+msgid "Broken datasets"
+msgstr "Conjuntos de datos con enlaces rotos"
+
+#: ckanext/dge_brokenlinks/templates/package/snippets/dge_brokenlinks_resource.html:8
+msgid "Broken link"
+msgstr ""
+"Enlace roto\n"
+"Última vez comprobado: {date}"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:133
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:149
+msgid "search_organization"
+msgstr "Buscar organización"
+
+#: ckanext/dge_brokenlinks/templates/header.html:8
+#: ckanext/dge_brokenlinks/templates/header.html:13
+#: ckanext/dge_brokenlinks/templates/header.html:14
+#: ckanext/dge_brokenlinks/templates/header.html:16
+#: ckanext/dge_brokenlinks/templates/header.html:17
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:14
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:62
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:87
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:129
+#: ckanext/dge_brokenlinks/templates/report/view.html:10
+#: ckanext/dge_brokenlinks/templates/report/view.html:12
+#: ckanext/dge_brokenlinks/templates/report/view.html:14
+#: ckanext/dge_brokenlinks/templates/report/view.html:15
+msgid "Broken links"
+msgstr "Enlaces rotos"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:97
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:139
+msgid "Dataset"
+msgstr "Conjunto de datos"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:165
+msgid "Banned domains"
+msgstr "Dominios bloqueados"
+
+#: ckanext/dge_brokenlinks/templates/report/view.html:26
+msgid "Date last report"
+msgstr "Última comprobación"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:156
+msgid "Dist broken links"
+msgstr "Distribuciones con enlaces rotos"
+
+#: ckanext/dge_brokenlinks/templates/package/snippets/dge_resource_item.html:11
+#, fuzzy
+msgid "Download"
+msgstr "Exportar como CSV"
+
+#: ckanext/dge_brokenlinks/templates/report/view.html:32
+msgid "Download as CSV"
+msgstr "Exportar como CSV"
+
+#: ckanext/dge_brokenlinks/templates/report/view.html:34
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:192
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:271
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:384
+msgid "Download as JSON"
+msgstr "Exportar como JSON"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:281
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:393
+msgid "Last success"
+msgstr "Última vez OK"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:172
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:282
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:394
+msgid "Latest fail"
+msgstr "Fecha del último fallo"
+
+#: ckanext/dge_brokenlinks/templates/report/view.html:33
+msgid "Administrator view"
+msgstr "Vista Administrador"
+
+msgid "Organization user"
+msgstr "Usuario organismo"
+
+#: ckanext/dge_brokenlinks/reports.py:240
+msgid "Dataset URLs that have broken links."
+msgstr "URLs de conjuntos de datos que tienen enlaces rotos."
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:101
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:143
+msgid "Most recent failed attempt"
+msgstr "Intento fallido más reciente"
+
+#: ckanext/dge_brokenlinks/templates/report/view.html:8
+msgid "My Account"
+msgstr ""
+
+#: ckanext/dge_brokenlinks/templates/report/view.html:40
+msgid "No results found."
+msgstr "No se encontraron resultados."
+
+#: ckanext/dge_brokenlinks/controllers.py:28
+#: ckanext/dge_brokenlinks/controllers.py:32
+#: ckanext/dge_brokenlinks/controllers.py:42
+msgid "Not authorized to see this page"
+msgstr ""
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:304
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:305
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:306
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:417
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:418
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:419
+msgid "Not recorded"
+msgstr "No registrado"
+
+#: ckanext/dge_brokenlinks/templates/package/snippets/dge_brokenlinks_resource.html:13
+msgid "Online link"
+msgstr ""
+"Enlace online\n"
+"Última vez comprobado: {date}"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:21
+msgid "Organisations for checking for broken links is activated"
+msgstr "Configuración de publicadores que tienen activa la comprobación de enlaces rotos"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:60
+msgid "Organization"
+msgstr "Organización"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:183
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:212
+msgid "Publishers Organizations"
+msgstr "Organismos publicadores"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:338
+msgid "URL of the distribution"
+msgstr "URL distribución"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:252
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:280
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:365
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:392
+msgid "Reason of the error"
+msgstr "Razón del error"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:26
+msgid "Organizations"
+msgstr "Organizaciones"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:99
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:141
+msgid "Reason"
+msgstr "Razón"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:47
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:48
+msgid "Refresh the organisation list to check for broken links"
+msgstr "Actualiza el listado de organismo a comprobar enlaces rotos"
+
+#: ckanext/dge_brokenlinks/templates/report/view.html:38
+msgid "Results"
+msgstr "Resultados"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:31
+msgid "Search"
+msgstr ""
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:100
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:142
+msgid "The last time it was successfully obtained"
+msgstr "La última vez que se obtuvo correctamente"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:98
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:140
+msgid "URL"
+msgstr ""
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:49
+msgid "Update"
+msgstr "Actualizar"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:49
+msgid "Update config"
+msgstr "Actualizar configuración"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:173
+msgid "Banned until"
+msgstr "Bloqueado hasta"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:171
+msgid "Domain"
+msgstr "Dominio"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:254
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:367
+msgid "Status Count"
+msgstr "Cantidad"
+
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:283
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:284
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:395
+#: ckanext/dge_brokenlinks/templates/report/broken_links.html:396
+msgid "Error type"
+msgstr "Tipo error"
+

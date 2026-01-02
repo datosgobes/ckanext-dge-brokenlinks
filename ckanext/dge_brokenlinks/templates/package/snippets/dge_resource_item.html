@@ -1,0 +1,9 @@
+{% ckan_extends %}
+
+{% block resource_item_explore %}
+
+    {% block archiver_resource %}
+      {% snippet 'package/snippets/dge_brokenlinks_resource.html', res = res %}
+    {% endblock %}
+
+{% endblock %}

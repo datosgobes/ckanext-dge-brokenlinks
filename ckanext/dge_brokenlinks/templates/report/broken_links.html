@@ -1,0 +1,445 @@
+{% set broken_linkOrgName = h.dge_url_for_user_organization() %}
+{% import 'macros/form.html' as form %}
+
+<script>
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    $('#search_bar').on('input', function () {
+        var searchVal = $(this).val().toLowerCase();
+        $('#organizationList li').each(function () {
+            var orgText = $(this).text().toLowerCase();
+            if (orgText.indexOf(searchVal) !== -1) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+
+     $('#org_form').on('submit', function (e) {
+        e.preventDefault();
+
+        var selectedOrgs = [];
+        $('.slider-checkbox:checked').each(function () {
+            selectedOrgs.push($(this).data('group'));
+        });
+
+        $('#selected_organizations').val(selectedOrgs.join(','));
+        
+        this.submit();
+    });
+
+    $('.slider-checkbox').on('change', function () {
+        var orgName = $(this).data('group');
+        if ($(this).prop('checked')) {
+            console.log("Activado: " + orgName);
+        } else {
+            console.log("Desactivado: " + orgName);
+        }
+    });
+
+
+    $('#selectAll').on('click', function () {
+        $('.slider-checkbox').each(function () {
+            const checkbox = $(this); 
+            const row = checkbox.closest('tr'); 
+            
+            if (row.is(':visible')) {
+                checkbox.prop('checked', true).trigger('change');
+            }
+        });
+    });
+
+    $('#deselectAll').on('click', function () {
+        $('.slider-checkbox').each(function () {
+            const checkbox = $(this);
+            const row = checkbox.closest('tr'); 
+            
+            if (row.is(':visible')) {
+                checkbox.prop('checked', false).trigger('change');
+            }
+        });
+    });
+
+
+    const searchInput = document.getElementById("search_bar");
+    const searchStatusInput = document.getElementById("searchStatus");
+    const table = document.getElementById("organizationTable");
+    const rows = table ? table.getElementsByTagName("tr") : [];
+
+    if (searchInput) {
+        searchInput.addEventListener("input", function() {
+            filterTable();
+        });
+    }
+
+    if (searchInput) {
+        searchStatusInput.addEventListener("change", function() {
+            filterTable();
+        });
+    }
+
+    $('.slider-checkbox').on('change', function () {
+        var orgName = $(this).data('group');
+        var statusLabel = $(this).closest('td').find('.status-label');
+
+        if ($(this).prop('checked')) {
+            statusLabel.text("Activado");
+            console.log("Activado: " + orgName);
+        } else {
+            statusLabel.text("Desactivado");
+            console.log("Desactivado: " + orgName);
+        }
+    });
+
+    function filterTable() {
+        const filterName = searchInput.value.toLowerCase();
+        const filterStatus = searchStatusInput.value.toLowerCase(); 
+
+        for (let i = 1; i < rows.length; i++) {
+            const firstColumn = rows[i].getElementsByTagName("td")[0]; 
+            const secondColumn = rows[i].getElementsByTagName("td")[1]; 
+            const checkbox = secondColumn.getElementsByTagName("input")[0];
+            
+            let showRow = true; 
+
+            if (firstColumn) {
+                const orgText = firstColumn.textContent || firstColumn.innerText;
+                if (orgText.toLowerCase().indexOf(filterName) === -1) {
+                    showRow = false;
+                }
+            }
+
+            if (checkbox) {
+                const isChecked = checkbox.checked;
+                const statusText = isChecked ? 'activo' : 'inactivo';
+               
+                if (filterStatus) {
+                    if (statusText !== filterStatus) {
+                        showRow = false; 
+                    }
+                }
+            }
+
+            if (showRow) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+    }
+});
+</script>
+
+{% if c.options['organization'] == None %}
+    {% if c.userobj.sysadmin %}
+	  <ul class="broken-results">
+        {% if broken_linkOrgName is not none %}
+          <h4>{{ _('Results') }}</h4>
+        {% endif %}
+          <div class="brokenlinks-progress">
+
+                <div class="broken-info" id="block-broken-date">
+                    <li class="broken-info-image">
+                        <img src="/images/date-links.svg" alt="Fecha último reporte">
+                    </li>
+                    <li class="broken-info-title">{{ _('Date last report') }}:</li>
+                    <li class="broken-info-result">
+                        {% set report_date = h.dge_getBrokenLinksReportDate() %}
+                        {% if report_date %}
+                            <span>{{ h.report__render_datetime(report_date, '%d/%m/%Y %H:%M') }}</span>
+                        {% else %}
+                            <span>00/00/00 00:00</span>
+                        {% endif %}
+                    </li>
+                </div>
+
+                <div class="broken-info" id="block-broken-datasets">
+                    <li class="broken-info-image">
+                        <img src="/images/datasets-warning.svg" alt="Conjuntos afectados">
+                    </li>
+                    <li class="broken-info-title">{{ _('Broken datasets') }}:</li>
+                    <li class="broken-info-result">
+                        <span id="partial1">{{ '{:,.0f}'.format(c.data['num_broken_packages'] | int).replace(',', '.') }}</span>
+                        <span>/</span>
+                        <span id="total1">{{ '{:,.0f}'.format(c.data['num_packages'] | int).replace(',', '.') }}</span>
+                        
+                    </li>
+                </div>
+
+                <div class="broken-info" id="block-broken-links">
+                    <li class="broken-info-image">
+                        <img src="/images/broken-links.svg" alt="Enlaces rotos">
+                    </li>
+                    <li class="broken-info-title">{{ _('Dist broken links') }}:</li>
+                    <li class="broken-info-result">
+                        <span id="partial2">{{ '{:,.0f}'.format(c.data['num_broken_resources'] | int).replace(',', '.') }}</span>
+                        <span>/</span>
+                        <span id="total2">{{ '{:,.0f}'.format(c.data['num_resources'] | int).replace(',', '.') }}</span>
+                    </li>
+                </div>
+
+          </div>
+
+          <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+          <script type="text/javascript"  src="{% url_for_static 'multiselect/dist/js/multiselect.js' %}"></script>
+
+          <script type="text/javascript">
+            jQuery(document).ready(function($) {
+	          $('#multiselect').multiselect();
+            });
+          </script>
+
+
+		  <div id="block-broken-links">
+              {% set options = [] %}
+			  <li>
+                <h4 class="mb-0">{{ _('Organisations for checking for broken links is activated') }}:</h4>
+                <div id="block-broken-groups">
+                    <div class="archiver-multiselect">
+                        <div class="row">
+                            {% set organizations = h.dge_processDataToSelect(c.data) %}
+                            <div class="broken-filter">
+                                <div class="broken-filter-item broken-filter-search">
+                                    <h2>Organización:</h2>
+                                    <input type="text" class="brokenlinks-input" id="search_bar" placeholder="Introduce un título..."/>
+                                </div>
+                                <div class="broken-filter-item broken-filter-state">
+                                    <h2>Estado comprobación:</h2>
+                                    <select id="searchStatus" class="form-control">
+                                        <option value="">Todos</option>
+                                        <option value="activo">Activo</option>
+                                        <option value="inactivo">Inactivo</option>
+                                    </select>
+                                </div>
+                                <div class="broken-filter-item broken-filter-activation">
+                                    <button id="selectAll" class="btn-link">Activar todos</button>
+                                    <button id="deselectAll" class="btn-link">Desactivar todos</button>
+                                </div>
+                            </div>
+                
+                                <div class="table-container">
+                                    <table id="organizationTable" class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre de la Organización</th>
+                                                <th>Estado comprobación</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for org in organizations %}
+                                                <tr>
+                                                    <td><strong>{{ org['org_title'] }}</strong></td>
+                                                    <td>
+                                                        <label class="switch">
+                                                            <input type="checkbox" class="slider-checkbox" name="to[]" data-group="{{ org['org_name'] }}" {% if org['is_checked'] %}checked{% endif %}>
+                                                            <span class="slider round"></span>
+                                                        </label>
+                                                        <span class="status-label">{{ 'Activado' if org['is_checked'] else 'Desactivado' }}</span>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                
+                                <form method="POST" id="org_form" action="{{ h.url_for('/report/broken-links-report') }}">
+                                    <div class="w--100 flex flex-justify-center mt-5">
+                                        <input type="hidden" name="selected_organizations" id="selected_organizations">
+                                        <button type="submit" class="btn btn-primary" title="{{ _('Refresh the organisation list to check for broken links') }}" alt="{{ _('Refresh the organisation list to check for broken links') }}">
+                                            {{ _('Update config') }}
+                                        </button>
+                                    </div>
+                                </form>
+                        </div>
+                    </div>
+                </div>
+         </li> 
+	    </div> 
+	  </ul>
+    {% set banned_data = h.dge_brokenlinks_get_banned_data() %}
+    {% if banned_data %}
+    <h4>{{_('Banned domains')}}</h4>
+    <table class="broken-links sortable" id="report-ban-table">
+
+		<thead>
+		  <tr>
+			<th>{{ _('Publishers Organizations') }}</th>
+			<th class="broken-stats">{{ _('Domain') }}</th>
+			<th class="broken-stats">{{ _('Latest fail') }}</th>
+			<th class="broken-stats">{{ _('Banned until') }}</th>
+		  </tr>
+	   </thead>
+	   <tbody>
+		{% for row in banned_data|sort(attribute='title') %}
+		  <tr data-org="{{row['name']}}">
+			<td>{{ h.link_to(row['title'], h.url_for("/report/broken-links", organization=row['name'])) }}</td>
+			<td>{{ row['domain'] }}</td>
+			<td>{{ h.render_datetime(row['last_failure'], '%d-%m-%Y %H:%M:%S') }}</td>
+			<td>{{ h.render_datetime(row['banned_until'], '%d-%m-%Y %H:%M:%S') }}</td>
+		  </tr>
+		{% endfor %}
+	   </tbody>
+	  </table>
+    {% endif %}
+
+    <h4>Listado de enlaces rotos en conjuntos de datos</h4>
+	  <table class="broken-links sortable" id="report-table">
+		<thead>
+		  <tr>
+			<th>{{ _('Publishers Organizations') }}</th>
+			<th class="broken-stats align-center">{{ _('Broken datasets') }}</th>
+			<th class="broken-stats align-center">{{ _('Broken links') }}</th>
+			<th class="broken-stats align-center">{{ _('perc Broken links') }}</th>
+		  </tr>
+	   </thead>
+	   <tbody>
+		
+        {% for row in c.data['table']|sort(attribute='organization_title') %}
+        
+            {% set org_title_lower = row['organization_title']|lower %}
+            {% set is_checked = false %}
+            
+            {% for org in organizations %}
+                {% if org['org_title']|lower == org_title_lower %}
+                    {% set is_checked = org['is_checked'] %}
+                    
+                    {% if is_checked %}
+                        <tr data-org="{{ row['organization_name'] }}">
+                            <td>{{ h.link_to(row['organization_title'], h.url_for("/report/broken-links", organization=row['organization_name'])) }}</td>
+                            <td class="align-center">{{ '{:,.0f}'.format(row['broken_package_count'] | int).replace(',', '.') }}</td>
+                            <td class="align-center">{{ '{:,.0f}'.format(row['broken_resource_count'] | int).replace(',', '.') }}</td>
+                            <td class="align-center">{{ row['broken_resource_percent'] }}%</td>
+                        </tr>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+	   </tbody>
+	  </table>
+    {% else %}
+      <div id="broken_link_title_no_access">Acceso denegado</div>
+      <br>
+      <div id="broken_link_message_no_access">No está autorizado para acceder al recurso solicitado</div>
+    {% endif %}
+{% else %}
+	<ul class="broken-results">
+        <h4>{{ _('Results') }}</h4>
+        <div class="brokenlinks-progress">
+            <div class="broken-info" id="block-broken-date">
+                <li class="broken-info-image">
+                    <img src="/images/date-links.svg" alt="Fecha último reporte">
+                </li>
+                <li class="broken-info-title">{{ _('Date last report') }}:</li>
+                <li class="broken-info-result">
+                    {% if request.params.organization %}
+                        {% set report_date = h.dge_brokenlinks_get_report_date(request.params.organization) %}
+                    {% endif %}
+                    <span>{% if report_date %}{{ h.report__render_datetime(report_date, '%d/%m/%Y %H:%M') }}{% else %}00/00/00 00:00{% endif %}</span>
+                </li>
+            </div>
+            <div class="broken-info" id="block-broken-datasets">
+                <li class="broken-info-image">
+                    <img src="/images/datasets-warning.svg" alt="Conjuntos afectados">
+                </li>
+                <li class="broken-info-title">{{ _('Broken datasets') }}:</li>
+                <li class="broken-info-result">
+                    <span id="partial1">{{ '{:,.0f}'.format(c.data['num_broken_packages'] | int).replace(',', '.') }}</span>
+                    <span>/</span>
+                    <span id="total1">{{ '{:,.0f}'.format(c.data['num_packages'] | int).replace(',', '.') }}</span>
+                </li>
+            </div>
+
+            <div class="broken-info" id="block-broken-links">
+                <li class="broken-info-image">
+                    <img src="/images/broken-links.svg" alt="Enlaces rotos">
+                </li>
+                <li class="broken-info-title">{{ _('Dist broken links') }}:</li>
+                <li class="broken-info-result">
+                    <span id="partial2">{{ '{:,.0f}'.format(c.data['num_broken_resources'] | int).replace(',', '.') }}</span>
+                    <span>/</span>
+                    <span id="total2">{{ '{:,.0f}'.format(c.data['num_resources'] | int).replace(',', '.') }}</span>
+                </li>
+            </div>
+        </div>
+    {%  set table_data = c.data['table']  %}
+    {% if table_data %}
+        <table class="broken-links sortable" id="status-id-table">
+            <thead>
+                <tr>
+                    <th class="broken-info" title="{{ _('Reason of the error') }}">{{ _('Reason of the error') }}</th>
+                    <th class="broken-info align-center" title="Estatus ID">Estatus ID</th>
+                    <th class="broken-info align-center" title="{{ _('Status Count') }}">{{ _('Status Count') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% set status_table = h.dge_brokenlinks_get_brokenlinks_status_count(c.data['organization_name']) %}
+            {% for row_dict in status_table %}
+                <tr>
+                <td>{{ row_dict['reason'] }}</td>
+                <td class="align-center">{{ row_dict['status_id'] }}</td>
+                <td class="align-center">{{ '{:,.0f}'.format(row_dict['status_count'] | int).replace(',', '.') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </ul>
+    <div class="module search-form">
+            <h1>{{ c.data['num_total_links'] }} enlaces rotos encontrados</h1>
+    </div>
+    <table class="broken-links sortable report-table-org" id="report-table" >
+        <thead>
+        <tr>
+            <th class="broken-info">{{ _('Dataset') }}</th>
+            <th class="broken-info">{{ _('URL of the distribution') }}</th>
+            <th class="broken-info">{{ _('Reason of the error') }}</th>
+            <th title="{{ _('The last time it was successfully obtained') }}">{{ _('Last success') }}</th>
+            <th title="{{ _('Most recent failed attempt') }}">{{ _('Latest fail') }}</th>
+            <th title="Tipo error" class="dropdown">
+            <div class="dropdown-toggle" data-toggle="dropdown">{{ _('Error type') }}</div>
+            <form>
+                <ul class="dropdown-menu dge-brokenlinks-dropdown" id="check_list" aria-labelledby="dropdownMenuButton">
+                {% for row_dict in status_table %}
+                {% if row_dict['status_id'] in table_data|map(attribute='status_id') %}
+                    <li class="dropdown-item"><div class="form-check" >
+                        <label class="form-check-label dge_brokenlinks_label_error" for="ckeck_{{row_dict['status_id']}}">{{ 'Warning' if row_dict['status_id']==408 else 'Error' }} {{ row_dict['status_id'] }}</label>
+                        <input type="checkbox" checked class="form-check-input" onclick="check_status({{row_dict['status_id']}}, {{h.dge_brokenlinks_get_url(table_data, row_dict['status_id'])}})" id="ckeck_{{row_dict['status_id']}}">
+                    </div>
+                    </li>
+                {% endif %}
+                {% endfor %}
+                </ul>
+            </form>
+            </th>
+        </tr>
+        </thead>
+        <tbody id="table_resources_checked">
+            {% for row_dict in table_data|sort(attribute='dataset_title') %}
+                <tr>
+                <td><a href="{{ h.url_for(controller='dataset', action='read', id=row_dict['dataset_name']) }}#{{ row_dict['resource_id'] }}">{{ row_dict['dataset_title'] }}</a></td>
+                <td><a href="{{ row_dict['resource_url'] }}" target="_blank">{{ row_dict['resource_url'] }}</a></td>
+                <td>{{ row_dict.get('reason', _('Not recorded')) }}</td>
+                <td>{{ h.render_datetime(row_dict.get('last_success'), '%d/%m/%Y') if row_dict.get('last_success') else _('Not recorded') }}</td>
+                <td>{{ h.render_datetime(row_dict.get('last_updated'), '%d/%m/%Y') if row_dict.get('first_failure') else _('Not recorded') }}</td>
+                <td data-title="{{row_dict.get('status_id')}}">Error</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {{ c.data['pager'] }}
+
+    {% else %}
+        <p>{{ _('No results found.') }}</p>
+    </ul>
+    {% endif %}
+{% endif %}
+{% if (c.userobj.sysadmin and c.options['organization'] == None) or (c.options['organization'] != None and table_data) %}
+<div class="w--100 flex flex-wrap mt-4 flex-gap-1 flex-justify-center">
+    <a class="btn button-download-secondary" href="{{ h.url_for('/report/broken-links/download', format='csv', org_name=request.params.organization) }}">{{ _("Download as CSV") }}</a>
+    {% if c.userobj.sysadmin %}
+    <a class="btn button-download-secondary" href="{{ h.url_for('/report/broken-links/download', format='json', org_name=request.params.organization) }}">{{ _("Download as JSON") }}</a>
+    {% endif %}
+</div>
+{% endif %}

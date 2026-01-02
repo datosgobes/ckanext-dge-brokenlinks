@@ -1,0 +1,87 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _('Broken links') }}{% endblock %}
+
+{% set broken_linkOrgName = h.dge_url_for_user_organization() %}
+{% if broken_linkOrgName is not none %}
+  {% set dge = h.dge_getOrganization(request.params) %}
+  {% if c.options['organization'] != None %}
+      {% set organization_title, data_table = h.dge_organization_data()%}
+  {% endif %}
+{% endif %}
+
+{% block breadcrumb_content %}
+  {% if broken_linkOrgName is not none %}
+    {% if c.userobj.sysadmin and c.options['organization'] != None %}
+      <li><a href="/report/broken-links">{{ _('Broken links') }}</a></li>
+      <li>{{ organization_title }}</li>
+    {% else %}
+      <li>{{ _('Broken links') }}</li>
+    {% endif %}
+  {% endif %}
+{% endblock%}
+
+{% block page_title_content %}
+  {% if broken_linkOrgName is not none %}
+<div>
+    {% if c.userobj.sysadmin and c.options['organization'] != None %}
+        <h1>{{ organization_title }}</h1>
+    {% else %}
+        <h1>{{ _(report.title) }}</h1>
+    {% endif %}
+</div>
+  {% endif %}
+{% endblock %}
+
+{% block primary %}
+  {% if broken_linkOrgName is not none %}
+    {% if c.userobj.sysadmin %}
+    <p class="italic">({{_('Administrator view')}})</p>
+  {% elif not c.userobj.sysadmin and c.options['organization'] != None%}
+    <p class="italic">({{organization_title}})</p>
+  {% endif %}
+    <div class="dge-archiver-intro brokenlinks-description">
+        {#{% set rep_date = h.dge_getReportDateByuserType(c.userobj.sysadmin) %}#}
+        <div class="paragraph-broken-1">
+          <p>{{ _('The portal') }}</p>
+          <strong>{{ _('datos.gob.es periodically checks the accessibility of the links') }}</strong>
+          <p>{{ _('of the distributions of the data sets published in the catalogue. The report below is a summary of the result of this check, including the') }}</p>
+          <strong>{{ _('list of all distributions that are failing') }}</strong>
+          <p>{{ _('the dataset to which it belongs, the details of the error and the time at which said link was checked.') }}</p>
+        </div>
+        <div class="paragraph-broken-2">
+          <p>{{ _('This check is performed by checking the response messages.') }}</p>
+        </div>
+    </div>
+  {% endif %}
+
+  <div class="dge-archiver">
+    {% if c.userobj is not none %}
+
+      {% if not are_some_results %}
+        <p>{{ _('No results found.') }}</p>
+      {% else %}
+        <div>
+          {% snippet report_template, table=data['table'], data=data, report_name=report_name, options=options %}
+        </div>
+      {% endif %}
+    {% else %}
+
+      <div id="broken_link_title_no_access"><p>{{ _('Acceso denegado') }}</p><div>
+      <br>
+      <div id="broken_link_message_no_access"><p>{{ _('No está autorizado para acceder al recurso solicitado') }}</p><div>
+    {% endif %}
+  </div>
+{% endblock %}
+
+
+{% block styles %}
+  {{ super() }}
+  {% asset 'dge_brokenlinks/dge-brokenlinks-report-css' %}
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% asset 'dge_brokenlinks/jquery-tablesorter-js' %}
+  {% asset 'dge_brokenlinks/dge-archiver-js' %}
+{% endblock %}

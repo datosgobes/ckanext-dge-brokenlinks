@@ -1,0 +1,25 @@
+{% if 'archiver' in res %}
+    {%- set archiver = res.archiver | tojson -%}
+    {%- set archiver = archiver.replace("{","").replace("}","").replace("'","") -%}
+    {% for subString in archiver.split(",") %}
+    	{% if 'updated' in subString.split(":")[0] %}
+			{%- set date = subString.split(":")[1].split('T')[0].split('-') -%}
+			{%- set formated_date = '{day}/{month}/{year}'.format(day=date[2], month=date[1], year=date[0]) -%}
+			{%- set formated_date = formated_date.replace("\"","").replace(" ", "") -%}
+			{% if h.dge_check_brokenlinks(res.id) == true %}
+				<span title="{{ _('Broken link').format(date=formated_date) }}" style="width: auto;" class="icon-stack archiver-icon-stack">
+					<img src="{{ h.url_for_static('/images/SVG/inbound-links-broken.svg') }}" aria-hidden="true" alt="">
+				</span>
+			{% elif h.dge_check_brokenlinks(res.id) == false %}
+				<span title="{{ _('Online link').format(date=formated_date) }}" style="width: auto;" class="icon-stack archiver-icon-stack">
+					<img src="{{ h.url_for_static('/images/SVG/inbound-links.svg') }}" aria-hidden="true" alt="">
+				</span>
+			{% else %}
+				{# Error 408 Timeout #}
+				<span style="width: auto;" class="icon-stack archiver-icon-stack">
+					<img src="{{ h.url_for_static('/images/SVG/inbound-links-broken.svg') }}" aria-hidden="true" alt="">
+				</span>
+			{% endif %}
+	    {% endif %}
+    {% endfor %}
+{% endif %}

@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Entidad Pública Empresarial Red.es
+# Copyright (C) 2026 Entidad Pública Empresarial Red.es
 #
 # This file is part of "dge-brokenlinks (datos.gob.es)".
 #
@@ -39,7 +39,7 @@ from ckanext.dge_brokenlinks import model as dge_model
 
 log = logging.getLogger(__name__)
 
-USER_AGENT = 'ckanext-brokenlinks'
+USER_AGENT = config.get('ckanext-dge-brokenlinks.user_agent', None)
 ALLOWED_SCHEMES = set(('http', 'https', 'ftp'))
 COULD_NOT_MAKE_HEAD_REQUEST = 'Could not make HEAD request'
 
@@ -282,18 +282,21 @@ def link_checker(data):
     url_timeout = data.get('url_timeout', 30)
 
     error_message = ''
-    headers = {'User-Agent': USER_AGENT}
+    headers = {'User-Agent': USER_AGENT} if USER_AGENT else None
     status_code = -1
     url = tidy_url(data['url'].strip())
 
     reason = ''
+    res = None
     attempts = 0
     while attempts < 3:
         try:
             attempts += 1
-            cert_path = config.get('requests.verify.ca_cert.path', '')
-            res = requests.head(url, timeout=int(url_timeout), verify=cert_path)
-            headers = res.headers
+            cert_path = config.get('requests.verify.ca_cert.path', '/etc/ssl/certs/ca-certificates.crt')
+            if headers:
+                res = requests.head(url, headers=headers, timeout=int(url_timeout), verify=cert_path)
+            else:
+                res = requests.head(url, timeout=int(url_timeout), verify=cert_path)
             status_code = res.status_code
             log.debug(status_code)
             for http_status in HTTPStatus:
@@ -363,7 +366,7 @@ def link_checker(data):
         finally:
             if status_code != HTTPStatus.REQUEST_TIMEOUT:
                 break
-    return json.dumps(dict(headers)), status_code, reason if reason else res.reason
+    return json.dumps(dict(res.headers) if res else {}), status_code, reason if reason else res.reason
 
 
 def ban_domain(brokenlinksDB, domain):

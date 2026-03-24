@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Entidad Pública Empresarial Red.es
+# Copyright (C) 2026 Entidad Pública Empresarial Red.es
 #
 # This file is part of "dge-brokenlinks (datos.gob.es)".
 #
@@ -115,6 +115,20 @@ def dge_brokenlinks_get_checkeable_groups():
     return result
 
 
+def dge_brokenlinks_check_broken_links(context):
+    context.log.debug('DENTRO DE dge_brokenlinks_check_broken_links')
+    method_log_prefix = '[%s][[dge_brokenlinks_check_broken_links]' % __name__
+    context.log.debug('%s Init method.' % (method_log_prefix))
+
+    organizations = CheckGroupArchiver.all()
+    group_ids = [o.group_id for o in organizations if o.checkeable]
+
+    for id in group_ids:
+        cmd = '/var/lib/ckan/default/bin/paster --plugin=ckanext-archiver archiver update ' + id + ' -c /etc/ckan/default/production.ini'
+        os.system(cmd)
+        time.sleep(1)  # to try to avoid machine getting overloaded
+
+
 def dge_brokenlinks_send_ban_mail(brokenlinksUrl):
     log.debug(par.START_METHOD, 'dge_brokenlinks_send_ban_mail')
     organization = utils.getOrganizationById(brokenlinksUrl.organism)
@@ -206,13 +220,13 @@ def dge_brokenlinks_buildmail(organization, model, use, brokendomainUrl = None):
     url_logos = config.get('ckanext.comments.url.image.logos')
     url_image_subscribe = config.get('ckanext.comments.url.image.subscribe')
     url_subscribe = config.get('ckanext.comments.url.subscribe')
-    site_title = config.get('ckan.site_title', '')
+    site_title = config.get('ckan.site_title', 'datos.gob.es')
     site_url = config.get('ckan.site_url')
     env = Environment(loader=FileSystemLoader(path))
         
     if use in 'ban':
         # Subject
-        subject = f'Dominio {brokendomainUrl.domain} bloqueado temporalmente por exceso de errores 408 Timeout ({site_title})'
+        subject = f'Dominio {brokendomainUrl.domain} bloqueado temporalmente en {site_title} durante la revisión de enlaces rotos'
         
         # Body
         url_report = config.get('ckan.site_url') + "/report/broken-links?organization=" + organization.name
@@ -277,7 +291,7 @@ def _dge_brokenlinks_send_email(from_addr, to_addrs, msg):
             smtp_user = None
             smtp_password = None
         else:
-            smtp_server = config.get('smtp.server', '')
+            smtp_server = config.get('smtp.server', 'localhost')
             smtp_starttls = False
             smtp_user = config.get('smtp.user')
             smtp_password = config.get('smtp.password')

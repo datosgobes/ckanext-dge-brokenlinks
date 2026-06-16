@@ -35,6 +35,7 @@ from ckan.plugins.toolkit import config
 from ckanext.dge_brokenlinks import default_settings as settings
 from ckanext.dge_brokenlinks.parameters import Parameters as par
 from ckanext.dge_brokenlinks import model as dge_model
+from ckanext.dge_brokenlinks import constants as constants
 
 try:
     from collections import OrderedDict  # from python 2.7
@@ -65,6 +66,23 @@ def link_checker(identifiers, queue):
                 lib.create_link_checker_task(resource, queue, True)
                 time.sleep(0.05)  # to try to avoid Redis getting overloaded
     log.debug(par.END_METHOD, 'link_checker')
+
+
+'''
+    Enqueue and Organism job
+'''
+def process_organism(identifier, queue):
+    '''
+    Check the organism and create a job for that.
+    '''
+    if exitsOrganizationById(identifier):
+        # Retrieve Organization -> Organism
+        organism = getOrganizationById(identifier)
+        lib.create_organism_checker_task(organism, queue)
+        time.sleep(0.1)  # to try to avoid Redis getting overloaded
+
+    else:
+        log.error('Error getting Organism: %s.', identifier)
 
 
 def update(identifiers, queue):
@@ -565,7 +583,7 @@ def resource_is_broken(resource_id):
     if bl_resource:
         if bl_resource.is_broken:
             return True
-        elif bl_resource.status_id != 408:
+        elif bl_resource.status_id not in (constants.HTTP_TIMEOUT_STATUS_CODE, constants.UNCHECKED_LINK_BANNED_DOMAIN_STATUS_CODE):
             return False
         else:
             return -1
@@ -598,6 +616,32 @@ def organization_report_data(org):
 
 def getOrganizationById(id):
     return model.Group.get(id)
+
+def exitsOrganizationById(id):
+    is_organization = False
+    if model.Group.get(id):
+        is_organization = True
+    else: is_organization = False
+    return is_organization
+
+'''
+    Return the Total Resources by url of one Organism
+    Tuple:[
+        url,
+        resource_id,
+        package_id]
+'''
+def getOrganizationTotalResourcesUrl(id):
+    packages = []
+    urls = []
+    packages.extend(model.Session.query(model.Package).filter_by(owner_org=id).filter_by(state='active').filter_by(type='dataset'))
+    for pack in packages:
+        resources = []
+        resources.extend(model.Session.query(model.Resource).filter_by(package_id=pack.id).filter_by(state='active'))
+        for res in resources:
+            if res.url:
+                urls.append([res.url, res.id, res.package_id])
+    return urls
 
 
 def get_banned_data_table():

@@ -36,12 +36,10 @@ from ckan.plugins import toolkit
 from ckanext.dge_brokenlinks import dge_logic
 from ckanext.dge_brokenlinks import interfaces as brokenlink_interfaces
 from ckanext.dge_brokenlinks import model as dge_model
+from ckanext.dge_brokenlinks import constants as constants
+from ckanext.dge_brokenlinks import utils
 
 log = logging.getLogger(__name__)
-
-USER_AGENT = config.get('ckanext-dge-brokenlinks.user_agent', None)
-ALLOWED_SCHEMES = set(('http', 'https', 'ftp'))
-COULD_NOT_MAKE_HEAD_REQUEST = 'Could not make HEAD request'
 
 http_status_success = [
     HTTPStatus.OK.phrase,
@@ -56,7 +54,7 @@ http_status_success = [
     HTTPStatus.PERMANENT_REDIRECT.phrase,
     HTTPStatus.METHOD_NOT_ALLOWED.phrase,
     HTTPStatus.REQUEST_TIMEOUT.phrase,
-    COULD_NOT_MAKE_HEAD_REQUEST
+    constants.COULD_NOT_MAKE_HEAD_REQUEST
 ]
 
 from ckanext.dge_brokenlinks.model import BrokenlinksDB, BrokendomainUrl
@@ -143,6 +141,30 @@ def link_checker_task(*args, **kwargs):
     dge_model.closeSession()
 
 
+def organism_checker_task(*args, **kwargs):
+    '''
+    Task for check the Organism's resources in bulk
+
+        organism -> organism detailed data
+    '''
+    timeout = config.get('ckanext.deg_brokenlinks.check_timeout', 30)
+    data_checker = {'url': None, 'url_timeout': timeout, 'package_id': None, 'resource_id': None}
+    
+    global banned_domains
+    banned_domains = getBannedDomains()
+
+    organism = kwargs.get('organism')
+
+    # Retrieve All Urls of the Organism
+    urls = utils.getOrganizationTotalResourcesUrl(organism.id)
+    
+    for url in urls:
+        data_checker['url'] = url[0]
+        data_checker['resource_id'] = url[1]
+        data_checker['package_id'] = url[2]
+        updateCkeckResourceInDB(data_checker)
+
+
 def update_resource_task(resource_id, queue='bulk'):
     '''
     Archive a resource.
@@ -179,7 +201,9 @@ def updateCkeckResourceInDB(data_checker):
     '''
 
     brokenlinksDB = BrokenlinksDB.get_for_resource(data_checker['resource_id'])
+
     domain = transformUrlToDomain(data_checker['url'])
+    banned_yet = False
     if domain in banned_domains:
         banned_yet = check_to_unban_by_domain(domain) if brokenlinksDB else True
         if banned_yet:
@@ -190,12 +214,18 @@ def updateCkeckResourceInDB(data_checker):
             brokenlinksDB.updated):
         log.debug("Check of resource with id %s skipped because it was recently checked.", data_checker['resource_id'])
         return
-    result, status_code, reason = link_checker(data_checker)
-    data_checker['result'] = result
-    data_checker['status_code'] = status_code
-    data_checker['reason'] = reason
+    if not banned_yet:
+        result, status_code, reason = link_checker(data_checker)
+        data_checker['result'] = result
+        data_checker['status_code'] = status_code
+        data_checker['reason'] = reason
+        is_broken = dge_model.Status.is_status_broken_bl(data_checker['status_code'])
+    else:
+        data_checker['result'] = json.dumps({})
+        data_checker['status_code'] = constants.UNCHECKED_LINK_BANNED_DOMAIN_STATUS_CODE
+        data_checker['reason'] = constants.UNCHECKED_LINK_BANNED_DOMAIN_REASON
+        is_broken = False
 
-    is_broken = dge_model.Status.is_status_broken_bl(data_checker['status_code'])
     last_success = None
     url_redirected_to = data_checker['url']
     updated = datetime.now()
@@ -207,7 +237,7 @@ def updateCkeckResourceInDB(data_checker):
         if is_broken:
             if not brokenlinksDB.first_failure: brokenlinksDB.first_failure = datetime.now()
             brokenlinksDB.failure_count += 1
-        elif not is_broken and data_checker['status_code'] != HTTPStatus.REQUEST_TIMEOUT:
+        elif not is_broken and data_checker['status_code'] not in (HTTPStatus.REQUEST_TIMEOUT, constants.UNCHECKED_LINK_BANNED_DOMAIN_STATUS_CODE):
             brokenlinksDB.last_success = datetime.now()
 
         brokenlinksDB.status_id = data_checker['status_code']
@@ -222,7 +252,7 @@ def updateCkeckResourceInDB(data_checker):
         if is_broken:
             first_failure = datetime.now()
             failure_count = 1
-        else:
+        elif not is_broken and data_checker['status_code'] not in (HTTPStatus.REQUEST_TIMEOUT, constants.UNCHECKED_LINK_BANNED_DOMAIN_STATUS_CODE):
             last_success = datetime.now()
 
         brokenlinksDB = BrokenlinksDB(package_id=data_checker['package_id'], resource_id=data_checker['resource_id'],
@@ -251,6 +281,7 @@ def _compare_retry_attempt(last_updated):
 
 
 def transformUrlToDomain(url):
+    'https://www.ine.es/jaxi/files/_px/es/csv_bdsc/t12/p403/a2018/02026.csv'
     steps = url.split('/')
     domain = ''
     for i in range(3):
@@ -282,7 +313,7 @@ def link_checker(data):
     url_timeout = data.get('url_timeout', 30)
 
     error_message = ''
-    headers = {'User-Agent': USER_AGENT} if USER_AGENT else None
+    headers = {'User-Agent': constants.USER_AGENT} if constants.USER_AGENT else None
     status_code = -1
     url = tidy_url(data['url'].strip())
 
@@ -323,7 +354,7 @@ def link_checker(data):
             log.debug("Could not make a head request to %r, error is: %s. Package is: %r. Resource is: %r", url, ve,
                       data.get('package_id'), data.get('resource_id'))
             status_code = -1
-            reason = COULD_NOT_MAKE_HEAD_REQUEST
+            reason = constants.COULD_NOT_MAKE_HEAD_REQUEST
         except requests.exceptions.ConnectionError as e:
             log.debug("Connection error to %r, error is: %s. Package is: %r. Resource is: %r", url, e,
                       data.get('package_id'), data.get('resource_id'))
@@ -428,10 +459,11 @@ def tidy_url(url):
         parsed_url = urllib3.util.parse_url(url)
     except urllib3.exceptions.LocationParseError as e:
         raise LinkInvalidError(_('URL parsing failure: %s') % e)
-
-    if not parsed_url.scheme or not parsed_url.scheme.lower() in ALLOWED_SCHEMES:
+    # Check we aren't using any schemes we shouldn't be.
+    # Scheme is case-insensitive.
+    if not parsed_url.scheme or not parsed_url.scheme.lower() in constants.ALLOWED_SCHEMES:
         raise LinkInvalidError(_('Invalid url scheme. Please use one of: %s') %
-                               ' '.join(ALLOWED_SCHEMES))
+                               ' '.join(constants.ALLOWED_SCHEMES))
 
     if not parsed_url.host:
         raise LinkInvalidError(_('URL parsing failure - did not find a host name'))

@@ -146,6 +146,32 @@ class DgeBrokenlinksCommand(CtxObject):
         sys.exit(0)
 
 
+    """
+        Create a CLI command that accepts (or doesn't accept) organisms -- equivalent to the current per-dataset command.
+        This command will retrieve the organisms sorted from the largest to the smallest dataset, ensuring the last one isn't necessarily the one with the most organisms and thus improving parallelization.
+    """
+    @dge_brokenlinks.command(u'link_checker_organism')
+    @click.option('-q', '--queue', required=False, default = 'bulk')
+    @click.option('-o', '--organism', required=True, help='Organisms to check resource links. Acepted "all", "selected" or organism id options.')
+    def link_checker_organism(queue, organism= None):
+        init = datetime.now()
+        # Process Organims in Bulk
+        if organism in {'selected', 'all'}:
+            check_to_unban_by_organism(None, organism)
+            dge_logic.dge_organism_check_broken_links_organism(organism, queue)
+        # Process One Organism
+        elif re.search(PATTERN, organism):
+            check_to_unban_by_organism(organism, None)
+            dge_logic.dge_organism_check_broken_links_organism(organism, queue)
+        else:
+            log.error('Organism not matches with the options: Acepted "all", "selected" or organism id options or is not provided.')
+
+        end = datetime.now()
+        par.log(log, par.LOG_INFO, ('[%s] - End link_checker_organism command. Executed command in %s milliseconds.' % (
+        end.strftime(DgeBrokenlinksCommand.datetime_format), (end - init).total_seconds() * 1000)))
+        sys.exit(0)
+
+
     @dge_brokenlinks.command(u'initdb')
     def initdb():
         init = datetime.now()

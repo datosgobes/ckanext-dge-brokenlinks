@@ -186,6 +186,11 @@ msgstr ""
 "Enlace online\n"
 "Última vez comprobado: {date}"
 
+#: ckanext/dge_brokenlinks/templates/package/snippets/dge_brokenlinks_resource.html:19
+#: ckanext/dge_brokenlinks/templates/package/snippets/dge_brokenlinks_resource.html:26
+msgid "Unvalidated link"
+msgstr "Enlace sin validar"
+
 #: ckanext/dge_brokenlinks/templates/report/broken_links.html:21
 msgid "Organisations for checking for broken links is activated"
 msgstr "Configuración de publicadores que tienen activa la comprobación de enlaces rotos"

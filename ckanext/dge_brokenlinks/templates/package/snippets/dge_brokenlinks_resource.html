@@ -15,11 +15,14 @@
 					<img src="{{ h.url_for_static('/images/SVG/inbound-links.svg') }}" aria-hidden="true" alt="">
 				</span>
 			{% else %}
-				{# Error 408 Timeout #}
-				<span style="width: auto;" class="icon-stack archiver-icon-stack">
-					<img src="{{ h.url_for_static('/images/SVG/inbound-links-broken.svg') }}" aria-hidden="true" alt="">
+				<span title="{{ _('Unvalidated link') }}" style="width: auto;" class="icon-stack archiver-icon-stack">
+					<img src="{{ h.url_for_static('/images/SVG/inbound-links-unchecked.svg') }}" aria-hidden="true" alt="">
 				</span>
 			{% endif %}
 	    {% endif %}
     {% endfor %}
+{% else %}
+	<span title="{{ _('Unvalidated link') }}" style="width: auto;" class="icon-stack archiver-icon-stack">
+		<img src="{{ h.url_for_static('/images/SVG/inbound-links-unchecked.svg') }}" aria-hidden="true" alt="">
+	</span>
 {% endif %}

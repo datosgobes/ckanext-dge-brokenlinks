@@ -68,6 +68,32 @@ def dge_organism_check_broken_links(option):
 
     log.debug(par.END_METHOD, 'organism_check_broken_links')
 
+'''
+    Orders the organism(s) from the one with the most resources to the one with the fewest, and sends them to the processing function in that order.
+'''
+def dge_organism_check_broken_links_organism(option, queue):
+    import operator
+    if option in 'selected':
+        # Find in CheckGroupArchiver table all the organims
+        organizations = CheckGroupArchiver.all_checkeable()
+    elif option in 'all':
+        # Find all the diferents organism in the database and simulate that all are checkeables
+        organizations = CheckGroupArchiver.all()
+    else:
+        # Simulate a CheckGroupArchiver object that is checkeable and create a list with only this object
+        organizations = [CheckGroupArchiver(group_id=option, checkeable=True)]
+
+    group_ids = [o.group_id for o in organizations]
+    count = {}
+    for id in group_ids:
+        result = CheckGroupArchiver.getNumberofResourcesByOrgId(id)
+        count[id] = result
+    sorted_d = sorted(count.items(), key=operator.itemgetter(1), reverse=True)
+
+    for sort in sorted_d:
+        utils.process_organism(sort[0], queue)
+
+
 
 def dge_brokenlinks_group_to_check(groups_to_check):
     log.debug('DENTRO DE dge_brokenlinks_group_to_check')
@@ -141,6 +167,7 @@ def dge_brokenlinks_send_ban_mail(brokenlinksUrl):
         log.info(mail_to + mail_ccs), message
         log.info(message)
         _dge_brokenlinks_send_email(message['From'], (mail_to + mail_ccs), message)
+        log.debug('ENVIO CORRE0')
     except MailerException as e:
         msg = '%r' % e
         log.exception('Exception sending email.')
@@ -181,6 +208,7 @@ def dge_brokenlinks_report_email_finished():
             log.info(mail_to + mail_ccs), message
             log.info(message)
             _dge_brokenlinks_send_email(message['From'], (mail_to + mail_ccs), message)
+            log.debug('ENVIO CORRE0')
         except MailerException as e:
             msg = '%r' % e
             log.exception('Exception sending email.')

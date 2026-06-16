@@ -142,6 +142,11 @@ msgstr ""
 "Enllaç online\n"
 "Comprovat per última vegada: {date}"
 
+#: ckanext/dge_brokenlinks/templates/package/snippets/dge_brokenlinks_resource.html:19
+#: ckanext/dge_brokenlinks/templates/package/snippets/dge_brokenlinks_resource.html:26
+msgid "Unvalidated link"
+msgstr "Enllaç no validat"
+
 #: ckanext/dge_brokenlinks/templates/report/broken_links.html:21
 msgid "Organisations for checking for broken links is activated"
 msgstr "Organismes que tenen activa la comprovació d’enllaços trencats"

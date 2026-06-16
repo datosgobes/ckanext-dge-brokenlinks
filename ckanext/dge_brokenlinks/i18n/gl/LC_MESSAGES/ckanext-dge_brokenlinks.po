@@ -141,6 +141,11 @@ msgstr ""
 "Ligazón online\n"
 "Última vez marcada: {date}"
 
+#: ckanext/dge_brokenlinks/templates/package/snippets/dge_brokenlinks_resource.html:19
+#: ckanext/dge_brokenlinks/templates/package/snippets/dge_brokenlinks_resource.html:26
+msgid "Unvalidated link"
+msgstr "Ligazón sen validar"
+
 #: ckanext/dge_brokenlinks/templates/report/broken_links.html:21
 msgid "Organisations for checking for broken links is activated"
 msgstr "Organismos que teñen activa a comprobación de ligazóns rotas"

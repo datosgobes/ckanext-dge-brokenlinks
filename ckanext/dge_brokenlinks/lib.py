@@ -72,6 +72,12 @@ def create_link_checker_task(data, queue, is_resource):
         log.error('The data with id %s insn\'t a resource or a package. The task to check the if the link is broken won\'t be created', data.id)
 
 
+''' Specific Job for process Organism '''
+def create_organism_checker_task(organism, queue):
+    name = organism.name
+    log.debug('Organism put into celery queue %s: %s', queue, name)
+    enqueue_job(tasks.organism_checker_task, queue=queue, kwargs={"organism": organism }, rq_kwargs={"timeout": config.get('ckan.jobs.timeout', 2000)})
+
 
 def create_package_task(package, queue):
 

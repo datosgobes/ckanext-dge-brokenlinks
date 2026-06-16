@@ -143,6 +143,11 @@ msgstr ""
 "Online link\n"
 "Last time checked: {date}"
 
+#: ckanext/dge_brokenlinks/templates/package/snippets/dge_brokenlinks_resource.html:19
+#: ckanext/dge_brokenlinks/templates/package/snippets/dge_brokenlinks_resource.html:26
+msgid "Unvalidated link"
+msgstr ""
+
 #: ckanext/dge_brokenlinks/templates/report/broken_links.html:21
 msgid "Organisations for checking for broken links is activated"
 msgstr ""
